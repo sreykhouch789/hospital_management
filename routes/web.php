@@ -9,6 +9,15 @@ use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\RoomController;
 use Illuminate\Support\Facades\Route;
 
+// Language Switcher Route
+Route::get('/lang/{locale}', function (string $locale) {
+    if (in_array($locale, ['en', 'km'])) {
+        session(['locale' => $locale]);
+    }
+
+    return redirect()->back();
+})->name('lang.switch');
+
 // Redirect root to dashboard
 Route::get('/', function () {
     return redirect()->route('dashboard');

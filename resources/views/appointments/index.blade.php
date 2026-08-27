@@ -1,19 +1,19 @@
 @extends('layouts.app')
 
-@section('title', 'Appointments')
+@section('title', __('app.appointments_title'))
 
 @section('content')
 <!-- Header & Action -->
 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
     <div>
         <h1 class="text-xl font-bold text-white flex items-center gap-2">
-            <i class="fa-solid fa-calendar-check text-emerald-400"></i> Appointments Management
+            <i class="fa-solid fa-calendar-check text-emerald-400"></i> {{ __('app.appointments_title') }}
         </h1>
-        <p class="text-xs text-slate-400">Schedule consultations, view doctor availability, and update status.</p>
+        <p class="text-xs text-slate-400">{{ __('app.appointments_subtitle') }}</p>
     </div>
     
     <button onclick="document.getElementById('addAppointmentModal').classList.remove('hidden')" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2">
-        <i class="fa-solid fa-calendar-plus"></i> Book Appointment
+        <i class="fa-solid fa-calendar-plus"></i> {{ __('app.book_appointment') }}
     </button>
 </div>
 
@@ -23,13 +23,13 @@
         <table class="w-full text-left text-xs">
             <thead class="text-slate-400 uppercase bg-slate-900/90 border-b border-slate-800">
                 <tr>
-                    <th class="py-3.5 px-4">APT Number</th>
-                    <th class="py-3.5 px-4">Patient</th>
-                    <th class="py-3.5 px-4">Doctor & Dept</th>
-                    <th class="py-3.5 px-4">Date & Time</th>
-                    <th class="py-3.5 px-4">Symptoms / Reason</th>
-                    <th class="py-3.5 px-4">Status</th>
-                    <th class="py-3.5 px-4 text-right">Actions</th>
+                    <th class="py-3.5 px-4">{{ __('app.apt_no') }}</th>
+                    <th class="py-3.5 px-4">{{ __('app.patient') }}</th>
+                    <th class="py-3.5 px-4">{{ __('app.doctor') }}</th>
+                    <th class="py-3.5 px-4">{{ __('app.date_time') }}</th>
+                    <th class="py-3.5 px-4">{{ __('app.symptoms_reason') }}</th>
+                    <th class="py-3.5 px-4">{{ __('app.status') }}</th>
+                    <th class="py-3.5 px-4 text-right">{{ __('app.actions') }}</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-800/60">
@@ -37,11 +37,11 @@
                     <tr class="hover:bg-slate-800/40 transition-colors">
                         <td class="py-3.5 px-4 font-mono font-bold text-emerald-400">{{ $apt->appointment_number }}</td>
                         <td class="py-3.5 px-4">
-                            <div class="font-bold text-white">{{ $apt->patient->name ?? 'N/A' }}</div>
+                            <div class="font-bold text-white">{{ $apt->patient->name ?? __('app.na') }}</div>
                             <div class="text-[11px] text-slate-400 font-mono">{{ $apt->patient->phone ?? '' }}</div>
                         </td>
                         <td class="py-3.5 px-4">
-                            <div class="font-semibold text-slate-200">{{ $apt->doctor->name ?? 'N/A' }}</div>
+                            <div class="font-semibold text-slate-200">{{ $apt->doctor->name ?? __('app.na') }}</div>
                             <div class="text-[11px] text-emerald-400">{{ $apt->doctor->specialization ?? '' }}</div>
                         </td>
                         <td class="py-3.5 px-4 text-slate-300 font-medium">
@@ -59,15 +59,15 @@
                                     @elseif($apt->status === 'Scheduled') border-amber-500/40 text-amber-400
                                     @elseif($apt->status === 'Completed') border-blue-500/40 text-blue-400
                                     @else border-rose-500/40 text-rose-400 @endif">
-                                    <option value="Scheduled" {{ $apt->status === 'Scheduled' ? 'selected' : '' }}>Scheduled</option>
-                                    <option value="Confirmed" {{ $apt->status === 'Confirmed' ? 'selected' : '' }}>Confirmed</option>
-                                    <option value="Completed" {{ $apt->status === 'Completed' ? 'selected' : '' }}>Completed</option>
-                                    <option value="Cancelled" {{ $apt->status === 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                    <option value="Scheduled" {{ $apt->status === 'Scheduled' ? 'selected' : '' }}>{{ __('app.status_scheduled') }}</option>
+                                    <option value="Confirmed" {{ $apt->status === 'Confirmed' ? 'selected' : '' }}>{{ __('app.status_confirmed') }}</option>
+                                    <option value="Completed" {{ $apt->status === 'Completed' ? 'selected' : '' }}>{{ __('app.status_completed') }}</option>
+                                    <option value="Cancelled" {{ $apt->status === 'Cancelled' ? 'selected' : '' }}>{{ __('app.status_cancelled') }}</option>
                                 </select>
                             </form>
                         </td>
                         <td class="py-3.5 px-4 text-right">
-                            <form action="{{ route('appointments.destroy', $apt->id) }}" method="POST" onsubmit="return confirm('Cancel & remove appointment?')" class="inline">
+                            <form action="{{ route('appointments.destroy', $apt->id) }}" method="POST" onsubmit="return confirm('{{ __('app.confirm_delete') }}')" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-slate-500 hover:text-rose-400 text-xs p-1">
@@ -78,7 +78,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7" class="text-center py-8 text-slate-500">No appointments recorded.</td>
+                        <td colspan="7" class="text-center py-8 text-slate-500">{{ __('app.no_appointments') }}</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -95,7 +95,7 @@
     <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
             <h3 class="text-base font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-calendar-plus text-emerald-400"></i> Book Appointment
+                <i class="fa-solid fa-calendar-plus text-emerald-400"></i> {{ __('app.book_appointment') }}
             </h3>
             <button onclick="document.getElementById('addAppointmentModal').classList.add('hidden')" class="text-slate-400 hover:text-white">
                 <i class="fa-solid fa-xmark text-lg"></i>
@@ -105,9 +105,9 @@
         <form action="{{ route('appointments.store') }}" method="POST" class="space-y-4 text-xs">
             @csrf
             <div>
-                <label class="block text-slate-300 font-medium mb-1">Select Patient</label>
+                <label class="block text-slate-300 font-medium mb-1">{{ __('app.select_patient') }}</label>
                 <select name="patient_id" required class="w-full bg-slate-800 border border-slate-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500">
-                    <option value="">-- Choose Patient --</option>
+                    <option value="">{{ __('app.choose_patient') }}</option>
                     @foreach($patients as $patient)
                         <option value="{{ $patient->id }}">{{ $patient->name }} ({{ $patient->mrn }})</option>
                     @endforeach
@@ -115,9 +115,9 @@
             </div>
 
             <div>
-                <label class="block text-slate-300 font-medium mb-1">Select Doctor</label>
+                <label class="block text-slate-300 font-medium mb-1">{{ __('app.select_doctor') }}</label>
                 <select name="doctor_id" required class="w-full bg-slate-800 border border-slate-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500">
-                    <option value="">-- Choose Doctor --</option>
+                    <option value="">{{ __('app.choose_doctor') }}</option>
                     @foreach($doctors as $doctor)
                         <option value="{{ $doctor->id }}">{{ $doctor->name }} ({{ $doctor->specialization }})</option>
                     @endforeach
@@ -125,18 +125,18 @@
             </div>
 
             <div>
-                <label class="block text-slate-300 font-medium mb-1">Appointment Date & Time</label>
+                <label class="block text-slate-300 font-medium mb-1">{{ __('app.appointment_date_time') }}</label>
                 <input type="datetime-local" name="appointment_date" required class="w-full bg-slate-800 border border-slate-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500">
             </div>
 
             <div>
-                <label class="block text-slate-300 font-medium mb-1">Symptoms / Notes</label>
-                <textarea name="symptoms" rows="2" placeholder="Describe symptoms or reason for visit..." class="w-full bg-slate-800 border border-slate-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500"></textarea>
+                <label class="block text-slate-300 font-medium mb-1">{{ __('app.symptoms_notes') }}</label>
+                <textarea name="symptoms" rows="2" placeholder="{{ __('app.symptoms_placeholder') }}" class="w-full bg-slate-800 border border-slate-700 text-white rounded-lg px-3 py-2 focus:outline-none focus:border-emerald-500"></textarea>
             </div>
 
             <div class="pt-3 flex justify-end gap-3 border-t border-slate-800">
-                <button type="button" onclick="document.getElementById('addAppointmentModal').classList.add('hidden')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg">Cancel</button>
-                <button type="submit" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg shadow-md shadow-emerald-500/20">Schedule Appointment</button>
+                <button type="button" onclick="document.getElementById('addAppointmentModal').classList.add('hidden')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg">{{ __('app.cancel') }}</button>
+                <button type="submit" class="px-5 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-lg shadow-md shadow-emerald-500/20">{{ __('app.schedule_appointment') }}</button>
             </div>
         </form>
     </div>
